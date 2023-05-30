@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>Promise chaining with Promise.all</p>
+
+    <script>
+        /*
+        Promise chaining is one of the things that makes promises so great and easy to use. 
+        We can execute a chain of asynchronous tasks, 
+        each task will be executed as soon as the previous task was completed.
+        */
+
+        function sum(a, b) {
+            return a + b;
+        }
+
+        const first = new Promise((resolve, reject) => {
+            const value = sum(1, 1);
+            if (value === 2) resolve(value);
+            else reject(value);
+        });
+
+        const second = new Promise((resolve, reject) => {
+            const value = sum(2, 2);
+            if (value === 4) resolve(value);
+            else reject(value);
+        });
+
+        const third = new Promise((resolve, reject) => {
+            const value = sum(3, 3);
+            if (value === 6) resolve(value);
+            else reject(value);
+        });
+
+        const fourth = new Promise((resolve, reject) => {
+            const value = sum(4, 4);
+            if (value === 8) resolve(value);
+            else reject(value);
+        });
+
+        const fifth = new Promise((resolve, reject) => {
+            const value = sum(5, 5);
+            if (value === 10) resolve(value);
+            else reject(value);
+        });
+
+
+        const allPromises = Promise.all([first, second, third, fourth, fifth]);
+        allPromises.then(success => console.log(success)).catch(error => console.log('error: ', error));
+
+
+    </script>
+</body>
+
+</html>

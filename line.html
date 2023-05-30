@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let inp;
+        let wrapTo = 4;
+        function readData() {
+            var client = new XMLHttpRequest();
+            client.open('GET', 'ht-feeder.geojson');
+            client.onreadystatechange = function () {
+                inp = client.responseText;
+            }
+            client.send();
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    let error = false;
+                    if (error == true) {
+                        reject();
+                    } else {
+                        resolve();
+                    }
+                    console.log("Reading complete..");
+                }, 1000);
+            });
+        }
+    
+
+        //aa.features.forEach((v,i) => {v.geometry.coordinates.forEach((u,j)=>{u[0]=parseFloat(u[0].toFixed(3));u[1]=parseFloat(u[1].toFixed(3))})});
+
+        function calcData() {
+            inp = JSON.parse(inp);
+            for (let i = 0; i < inp.features.length; i++) {
+                for (let j = 0; j < inp.features[i].geometry.coordinates.length; j++) {
+                    let lon = inp.features[i].geometry.coordinates[j][0];
+                    let lat = inp.features[i].geometry.coordinates[j][1];
+                    lon = parseFloat(lon.toFixed(wrapTo));
+                    lat = parseFloat(lat.toFixed(wrapTo));
+                    inp.features[i].geometry.coordinates[j][0] = lon;
+                    inp.features[i].geometry.coordinates[j][1] = lat;
+                }
+            }
+            //console.log(inp);
+            document.write(JSON.stringify(inp));
+            console.log("Conversion complete..");
+
+            const link = document.createElement("a");
+            const content = JSON.stringify(inp);
+            const file = new Blob([content], { type: 'text/plain' });
+            link.href = URL.createObjectURL(file);
+            link.download = "ht-feeder_converted.geojson";
+            link.click();
+        }
+
+        readData().then(calcData).catch(err => { console.log(err.message) });
+
+    </script>
+</body>
+
+</html>
